@@ -53,10 +53,10 @@
   <label>ممشى آخر تغيير زيت</label>
   <input type="number" id="lastKm" placeholder="أو أدخل الرقم مباشرة" />
   <select id="lastKmSelect">
-    <option value="">اخرى</option>
+    <option value="">يوجد ممشى لآخر تغيير زيت</option>
     <option value="اخرى">أخرى</option>
   </select>
-  <input id="lastKmOther" placeholder="اكتب الممشى إذا اخترت 'أخرى'" />
+  <input id="lastKmOther" placeholder="اكتب الملاحظة إذا اخترت 'أخرى'" />
 
   <button onclick="addVehicle()">إضافة المركبة</button>
 </div>
@@ -110,7 +110,6 @@
 الممشى منذ اخر تغيير: ${diff}
 تاريخ آخر تغيير زيت: ${formattedDate}
 حالة فلتر الزيت: ${filterText}
-ممشى آخر تغيير زيت: ${lastKmText}
 ----------------------`;
 
     vehicles.push(text);
