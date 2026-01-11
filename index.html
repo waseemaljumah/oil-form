@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>نموذج متابعة تغيير الزيت</title>
+  <!-- ربط ملف CSS الخارجي -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<h2>نموذج إدخال بيانات المركبات</h2>
+
+<div class="card">
+  <label>رقم المعدة</label>
+  <input id="number" />
+
+  <label>نوع المعدة</label>
+  <select id="type">
+    <option value="قلاب فولفو">قلاب فولفو</option>
+    <option value="قلاب مرسيدس">قلاب مرسيدس</option>
+    <option value="شيول">شيول</option>
+    <option value="بلدوزر">بلدوزر</option>
+    <option value="بوبكات">بوبكات</option>
+    <option value="اخرى">أخرى</option>
+  </select>
+  <input id="typeOther" placeholder="اكتب نوع المعدة إذا اخترت 'أخرى'" />
+
+  <label>تاريخ آخر تغيير زيت</label>
+  <input type="date" id="date" />
+
+  <label>فلتر الزيت</label>
+  <select id="filter">
+    <option value="تم تغييره في آخر تغيير">تم تغييره في آخر تغيير</option>
+    <option value="تم تغييره في التغيير قبل الأخير">تم تغييره في التغيير قبل الأخير</option>
+    <option value="لم يتم تغييره في آخر تغييرين">لم يتم تغييره في آخر تغييرين</option>
+  </select>
+
+  <label>الممشى الحالي</label>
+  <input type="number" id="currentKm" />
+
+  <label>ممشى آخر تغيير زيت</label>
+  <input type="number" id="lastKm" />
+
+  <button onclick="addVehicle()">إضافة المركبة</button>
+</div>
+
+<div class="card">
+  <h3>النص الجاهز للإرسال</h3>
+  <div id="output"></div>
+  <button onclick="copyText()">نسخ النص</button>
+</div>
+
+<script>
+const typeSelect = document.getElementById('type');
+const typeOther = document.getElementById('typeOther');
+typeSelect.addEventListener('change', () => {
+  typeOther.style.display = typeSelect.value === 'اخرى' ? 'block' : 'none';
+});
+
+let vehicles = [];
+
+function addVehicle() {
+  const currentKm = document.getElementById('currentKm');
+  const lastKm = document.getElementById('lastKm');
+  const number = document.getElementById('number');
+  const type = document.getElementById('type');
+  const date = document.getElementById('date');
+  const filter = document.getElementById('filter');
+
+  const diff = Number(currentKm.value) - Number(lastKm.value);
+  const formattedDate = date.value ? date.value.replace(/-/g, '/') : '';
+
+  const typeText = type.value === 'اخرى' ? typeOther.value : type.value;
+
+  const text = `رقم المعدة: ${number.value}
+نوع المعدة: ${typeText}
+المسافة منذ آخر تغيير: ${diff}
+تاريخ آخر تغيير زيت: ${formattedDate}
+حالة فلتر الزيت: ${filter.value}
+----------------------`;
+
+  vehicles.push(text);
+  document.getElementById('output').innerText = vehicles.join("\n");
+
+  document.querySelectorAll('input').forEach(i => i.value = "");
+}
+
+function copyText() {
+  const output = document.getElementById('output');
+  navigator.clipboard.writeText(output.innerText);
+  alert('تم النسخ');
+}
+</script>
+
+</body>
+</html>
