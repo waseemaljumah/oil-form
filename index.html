@@ -6,6 +6,15 @@
   <title>نموذج متابعة تغيير الزيت</title>
   <!-- ربط ملف CSS الخارجي -->
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* إظهار/إخفاء الحقول الأخرى بشكل افتراضي */
+    input#typeOther,
+    input#filterOther,
+    input#lastKmOther {
+      display: none;
+      margin-top: 5px;
+    }
+  </style>
 </head>
 <body>
 
@@ -36,14 +45,18 @@
     <option value="لم يتم تغييره في آخر تغييرين">لم يتم تغييره في آخر تغييرين</option>
     <option value="اخرى">أخرى</option>
   </select>
-  <input id="typeOther" placeholder="اكتب الحالة إذا اخترت 'أخرى'" />
-
+  <input id="filterOther" placeholder="اكتب حالة الفلتر إذا اخترت 'أخرى'" />
 
   <label>الممشى الحالي</label>
   <input type="number" id="currentKm" />
 
   <label>ممشى آخر تغيير زيت</label>
-  <input type="number" id="lastKm" />
+  <input type="number" id="lastKm" placeholder="أو أدخل الرقم مباشرة" />
+  <select id="lastKmSelect">
+    <option value="">اخرى</option>
+    <option value="اخرى">أخرى</option>
+  </select>
+  <input id="lastKmOther" placeholder="اكتب الممشى إذا اخترت 'أخرى'" />
 
   <button onclick="addVehicle()">إضافة المركبة</button>
 </div>
@@ -55,45 +68,67 @@
 </div>
 
 <script>
-const typeSelect = document.getElementById('type');
-const typeOther = document.getElementById('typeOther');
-typeSelect.addEventListener('change', () => {
-  typeOther.style.display = typeSelect.value === 'اخرى' ? 'block' : 'none';
-});
+  const typeSelect = document.getElementById('type');
+  const typeOther = document.getElementById('typeOther');
+  typeSelect.addEventListener('change', () => {
+    typeOther.style.display = typeSelect.value === 'اخرى' ? 'block' : 'none';
+  });
 
-let vehicles = [];
+  const filterSelect = document.getElementById('filter');
+  const filterOther = document.getElementById('filterOther');
+  filterSelect.addEventListener('change', () => {
+    filterOther.style.display = filterSelect.value === 'اخرى' ? 'block' : 'none';
+  });
 
-function addVehicle() {
-  const currentKm = document.getElementById('currentKm');
-  const lastKm = document.getElementById('lastKm');
-  const number = document.getElementById('number');
-  const type = document.getElementById('type');
-  const date = document.getElementById('date');
-  const filter = document.getElementById('filter');
+  const lastKmSelect = document.getElementById('lastKmSelect');
+  const lastKmOther = document.getElementById('lastKmOther');
+  lastKmSelect.addEventListener('change', () => {
+    lastKmOther.style.display = lastKmSelect.value === 'اخرى' ? 'block' : 'none';
+  });
 
-  const diff = Number(currentKm.value) - Number(lastKm.value);
-  const formattedDate = date.value ? date.value.replace(/-/g, '/') : '';
+  let vehicles = [];
 
-  const typeText = type.value === 'اخرى' ? typeOther.value : type.value;
+  function addVehicle() {
+    const currentKm = document.getElementById('currentKm');
+    const lastKm = document.getElementById('lastKm');
+    const lastKmSel = document.getElementById('lastKmSelect');
+    const lastKmO = document.getElementById('lastKmOther');
+    const number = document.getElementById('number');
+    const type = document.getElementById('type');
+    const date = document.getElementById('date');
+    const filter = document.getElementById('filter');
+    const filterO = document.getElementById('filterOther');
 
-  const text = `رقم المعدة: ${number.value}
+    const diff = Number(currentKm.value) - Number(lastKm.value);
+    const formattedDate = date.value ? date.value.replace(/-/g, '/') : '';
+    const typeText = type.value === 'اخرى' ? typeOther.value : type.value;
+    const filterText = filter.value === 'اخرى' ? filterO.value : filter.value;
+    const lastKmText = lastKmSel.value === 'اخرى' ? lastKmO.value : lastKm.value;
+
+    const text = `رقم المعدة: ${number.value}
 نوع المعدة: ${typeText}
 الممشى منذ اخر تغيير: ${diff}
 تاريخ آخر تغيير زيت: ${formattedDate}
-حالة فلتر الزيت: ${filter.value}
+حالة فلتر الزيت: ${filterText}
+ممشى آخر تغيير زيت: ${lastKmText}
 ----------------------`;
 
-  vehicles.push(text);
-  document.getElementById('output').innerText = vehicles.join("\n");
+    vehicles.push(text);
+    document.getElementById('output').innerText = vehicles.join("\n");
 
-  document.querySelectorAll('input').forEach(i => i.value = "");
-}
+    // مسح الحقول
+    document.querySelectorAll('input').forEach(i => i.value = "");
+    document.querySelectorAll('select').forEach(s => s.value = s.options[0].value);
+    typeOther.style.display = 'none';
+    filterOther.style.display = 'none';
+    lastKmOther.style.display = 'none';
+  }
 
-function copyText() {
-  const output = document.getElementById('output');
-  navigator.clipboard.writeText(output.innerText);
-  alert('تم النسخ');
-}
+  function copyText() {
+    const output = document.getElementById('output');
+    navigator.clipboard.writeText(output.innerText);
+    alert('تم النسخ');
+  }
 </script>
 
 </body>
