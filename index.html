@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>نموذج متابعة تغيير الزيت</title>
-  <!-- ربط ملف CSS الخارجي -->
+
   <link rel="stylesheet" href="style.css" />
+
   <style>
-    /* إظهار/إخفاء الحقول الأخرى بشكل افتراضي */
     input#typeOther,
     input#filterOther,
     input#lastKmOther {
@@ -52,10 +52,12 @@
 
   <label>ممشى آخر تغيير زيت</label>
   <input type="number" id="lastKm" />
+
   <select id="lastKmSelect">
     <option value="">يوجد ممشى لآخر تغيير زيت</option>
     <option value="اخرى">أخرى</option>
   </select>
+
   <input id="lastKmOther" placeholder="اكتب الملاحظة إذا اخترت 'أخرى'" />
 
   <button onclick="addVehicle()">إضافة المركبة</button>
@@ -82,53 +84,26 @@
 
   const lastKmSelect = document.getElementById('lastKmSelect');
   const lastKmOther = document.getElementById('lastKmOther');
+  const lastKmInput = document.getElementById('lastKm');
+
   lastKmSelect.addEventListener('change', () => {
-    lastKmOther.style.display = lastKmSelect.value === 'اخرى' ? 'block' : 'none';
+    if (lastKmSelect.value === 'اخرى') {
+      lastKmOther.style.display = 'block';
+      lastKmInput.style.display = 'none';
+    } else {
+      lastKmOther.style.display = 'none';
+      lastKmInput.style.display = 'block';
+    }
   });
 
   let vehicles = [];
 
   function addVehicle() {
-    const currentKm = document.getElementById('currentKm');
-    const lastKm = document.getElementById('lastKm');
-    const lastKmSel = document.getElementById('lastKmSelect');
-    const lastKmO = document.getElementById('lastKmOther');
     const number = document.getElementById('number');
     const type = document.getElementById('type');
     const date = document.getElementById('date');
     const filter = document.getElementById('filter');
-    const filterO = document.getElementById('filterOther');
+    const currentKm = document.getElementById('currentKm');
 
-    const diff = Number(currentKm.value) - Number(lastKm.value);
-    const formattedDate = date.value ? date.value.replace(/-/g, '/') : '';
     const typeText = type.value === 'اخرى' ? typeOther.value : type.value;
-    const filterText = filter.value === 'اخرى' ? filterO.value : filter.value;
-    const lastKmText = lastKmSel.value === 'اخرى' ? lastKmO.value : lastKm.value;
-
-    const text = `رقم المعدة: ${number.value}
-نوع المعدة: ${typeText}
-الممشى منذ اخر تغيير: ${diff}
-تاريخ آخر تغيير زيت: ${formattedDate}
-حالة فلتر الزيت: ${filterText}
-----------------------`;
-
-    vehicles.push(text);
-    document.getElementById('output').innerText = vehicles.join("\n");
-
-    // مسح الحقول
-    document.querySelectorAll('input').forEach(i => i.value = "");
-    document.querySelectorAll('select').forEach(s => s.value = s.options[0].value);
-    typeOther.style.display = 'none';
-    filterOther.style.display = 'none';
-    lastKmOther.style.display = 'none';
-  }
-
-  function copyText() {
-    const output = document.getElementById('output');
-    navigator.clipboard.writeText(output.innerText);
-    alert('تم النسخ');
-  }
-</script>
-
-</body>
-</html>
+    const filterText = filter.value === 'اخرى' ? filterOther.value
